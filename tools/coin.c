@@ -60,7 +60,6 @@ int main (int _argc, char *_argv[]) {
 #   ifdef PREFIX
     bindtextdomain("c-coin", PREFIX "/share/locale/");
 #   endif
-    textdomain("c-coin");
     
     if (input) {
 

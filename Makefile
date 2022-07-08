@@ -18,10 +18,12 @@ $(COIN_EXE): tools/coin.c coin.h
 
 
 ## -- gettext --
+ifneq ($(PREFIX),)
 install: install-po
 install-po:
 	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
 	cp locales/es/LC_MESSAGES/c-coin.mo $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
 	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
 	cp locales/eu/LC_MESSAGES/c-coin.mo $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
+endif
 ## -- gettext --
