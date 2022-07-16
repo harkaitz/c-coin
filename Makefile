@@ -10,9 +10,9 @@ CFLAGS_ALL =$(CFLAGS) $(CPPFLAGS) $(if,$(NO_GETTEXT),-DNO_GETTEXT) -DPREFIX=\"$(
 all: $(PROGRAMS)
 install: $(PROGRAMS)
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	mkdir -p $(DESTDIR}$(PREFIX)/include/types
+	mkdir -p $(DESTDIR)$(PREFIX)/include/types
 	cp $(PROGRAMS) $(DESTDIR)$(PREFIX)/bin
-	cp $(HEADERS) $(DESTDIR)$(PREFIX)/include/types
+	cp $(HEADERS)  $(DESTDIR)$(PREFIX)/include/types
 clean:
 	rm -f $(PROGRAMS)
 
