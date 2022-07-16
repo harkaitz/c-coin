@@ -6,7 +6,7 @@ PROGRAMS   =tools/coin$(EXE)
 HEADERS    =coin.h
 CFLAGS_ALL =$(CFLAGS) $(CPPFLAGS) $(if,$(NO_GETTEXT),-DNO_GETTEXT) -DPREFIX=\"$(PREFIX)\"
 
-##
+## ------------------------------------------------------
 all: $(PROGRAMS)
 install: $(PROGRAMS)
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
@@ -16,7 +16,7 @@ install: $(PROGRAMS)
 clean:
 	rm -f $(PROGRAMS)
 
-##
+## ------------------------------------------------------
 tools/coin$(EXE): tools/coin.c coin.h
 	$(CC) -o $@ tools/coin.c $(CFLAGS_ALL) 
 
