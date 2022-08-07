@@ -7,6 +7,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <alloca.h>
+#include <strings.h>
 #ifdef NO_GETTEXT
 #  define COIN_T(T) (T)
 #else
@@ -24,20 +26,17 @@ typedef struct coin_ss {
 } coin_ss;
 
 
-#define COIN_FUNC     __attribute__((weak))
-#define COIN_GVAR     __attribute__((weak))
+
 #define COIN_SS_STORE alloca(sizeof(coin_ss))
+#define COIN(FF,CC,CUR) { ((FF)*100)+(CC), CUR}
 
-COIN_GVAR const char *COIN_DEFAULT_CURRENCY       = "usd";
-COIN_GVAR const char *COIN_ALLOWED_CURRENCIES[20] = {
-    "usd", "$",
-    NULL
-};
+extern const char *COIN_DEFAULT_CURRENCY;
+extern const char *COIN_ALLOWED_CURRENCIES[];
 
 
 
 
-COIN_FUNC coin_t
+static inline coin_t
 coin (unsigned long _cents, const char _currency[]) {
     coin_t out = {0};
     out.cents = _cents;
@@ -49,19 +48,19 @@ coin (unsigned long _cents, const char _currency[]) {
     return out;
 }
 
-COIN_FUNC bool
+static inline bool
 coin_same_currency (coin_t _c1, coin_t _c2) {
     return (!strcasecmp(_c1.currency, _c2.currency));
 }
 
-COIN_FUNC bool
+static inline bool
 coin_equal (coin_t _c1, coin_t _c2) {
     if (_c1.cents != _c2.cents) return false;
     if (!coin_same_currency(_c1, _c2)) return false;
     return true;
 }
 
-COIN_FUNC char const *
+static inline char const *
 coin_currency_is_allowed(const char *_name_or_symbol, size_t len, bool symbol) {
     for (int i=0; COIN_ALLOWED_CURRENCIES[i]; i+=2) {
         const char *n   = COIN_ALLOWED_CURRENCIES[i];
@@ -78,7 +77,7 @@ coin_currency_is_allowed(const char *_name_or_symbol, size_t len, bool symbol) {
     return NULL;
 }
 
-COIN_FUNC bool
+static inline bool
 coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
 
     const char  *p            = _value;
@@ -167,8 +166,8 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
     return true;
 }
 
-COIN_FUNC int
-coin_sprintf (coin_t _c, size_t _max, char _buf[_max], bool _with_currency) {
+static inline int
+coin_sprintf (coin_t _c, size_t _max, char _buf[], bool _with_currency) {
     int r=0;
     unsigned long n1 = _c.cents/100;
     unsigned long n2 = _c.cents%100;
@@ -180,7 +179,7 @@ coin_sprintf (coin_t _c, size_t _max, char _buf[_max], bool _with_currency) {
     return r;
 }
 
-COIN_FUNC int
+static inline int
 coin_fprintf (coin_t _c, FILE *_fp, bool _with_currency) {
     int r=0;
     unsigned long n1 = _c.cents/100;
@@ -193,7 +192,7 @@ coin_fprintf (coin_t _c, FILE *_fp, bool _with_currency) {
     return r;
 }
 
-COIN_FUNC bool
+static inline bool
 coin_divide1 (coin_t *_o, coin_t _i, unsigned long _div, const char **_reason) {
     if (_div == 0/*err*/) {
         if (_reason) *_reason = COIN_T("Monetary division by zero");
@@ -208,7 +207,7 @@ coin_divide1 (coin_t *_o, coin_t _i, unsigned long _div, const char **_reason) {
     return true;
 }
 
-COIN_FUNC bool
+static inline bool
 coin_divide2 (long *_o, coin_t _i, coin_t _div, const char **_reason) {
     if (!coin_same_currency(_i,_div)/*err*/) {
         if (_reason) *_reason = COIN_T("Not the same currency");
@@ -226,7 +225,7 @@ coin_divide2 (long *_o, coin_t _i, coin_t _div, const char **_reason) {
     return true;
 }
 
-COIN_FUNC bool
+static inline bool
 coin_substract (coin_t *_o, coin_t _c1, coin_t _c2, const char **_reason) {
     if (!coin_same_currency(_c1,_c2)/*err*/) {
         if (_reason) *_reason = COIN_T("Not the same currency");
@@ -241,7 +240,7 @@ coin_substract (coin_t *_o, coin_t _c1, coin_t _c2, const char **_reason) {
     return true;
 }
 
-COIN_FUNC coin_t
+static inline coin_t
 coin_sum (coin_t _c1, coin_t _c2) {
     coin_t out;
     out.cents = _c1.cents + _c2.cents;
@@ -249,7 +248,7 @@ coin_sum (coin_t _c1, coin_t _c2) {
     return out;
 }
 
-COIN_FUNC coin_t
+static inline coin_t
 coin_multiply (coin_t _c1, long _count) {
     coin_t out;
     out.cents = _c1.cents * _count;
@@ -257,7 +256,7 @@ coin_multiply (coin_t _c1, long _count) {
     return out;
 }
 
-COIN_FUNC char const *
+static inline char const *
 coin_str(coin_t _c, coin_ss *_cs) {
     coin_sprintf(_c, sizeof(_cs->s), _cs->s, true);
     _cs->s[sizeof(_cs->s)-1] = '\0';

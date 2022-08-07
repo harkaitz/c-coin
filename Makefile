@@ -45,5 +45,9 @@ install-po:
 	cp locales/es/LC_MESSAGES/c-coin.mo $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
 	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
 	cp locales/eu/LC_MESSAGES/c-coin.mo $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
+	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES
+	cp locales/ca/LC_MESSAGES/c-coin.mo $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES
+	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES
+	cp locales/gl/LC_MESSAGES/c-coin.mo $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES
 endif
 ## -- gettext --

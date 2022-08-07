@@ -16,30 +16,30 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: coin.h:97 coin.h:107 coin.h:111 coin.h:126 coin.h:139
+#: coin.h:96 coin.h:106 coin.h:110 coin.h:125 coin.h:138
 msgid "Invalid monetary format"
 msgstr ""
 
-#: coin.h:130
+#: coin.h:129
 msgid "Unsupported monetary precision"
 msgstr ""
 
-#: coin.h:158
+#: coin.h:157
 msgid "Unsupported currency"
 msgstr ""
 
-#: coin.h:199 coin.h:218
+#: coin.h:198 coin.h:217
 msgid "Monetary division by zero"
 msgstr ""
 
-#: coin.h:203 coin.h:222
+#: coin.h:202 coin.h:221
 msgid "Monetary not divisible"
 msgstr ""
 
-#: coin.h:214 coin.h:232
+#: coin.h:213 coin.h:231
 msgid "Not the same currency"
 msgstr ""
 
-#: coin.h:236
+#: coin.h:235
 msgid "Monetary value crosses to negative"
 msgstr ""

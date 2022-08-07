@@ -2,11 +2,15 @@
 #include <unistd.h>
 #include <locale.h>
 #include <libintl.h>
+#include <getopt.h>
 
 #define COPYRIGHT_LINE \
     "Bug reports, feature requests to gemini|https://harkadev.com/oss" "\n" \
     "Copyright (c) 2022 Harkaitz Agirre, harkaitz.aguirre@gmail.com" "\n" \
     ""
+
+const char *COIN_DEFAULT_CURRENCY       = "usd";
+const char *COIN_ALLOWED_CURRENCIES[20] = { "usd", "$", NULL };
 
 int main (int _argc, char *_argv[]) {
 
