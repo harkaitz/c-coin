@@ -1,4 +1,6 @@
 I18N_TAG=COIN_T
 ## -- AUTO --
-. auto-c-mit
+auto() {
+    auto-c-mit "$@"
+}
 ## -- AUTO --

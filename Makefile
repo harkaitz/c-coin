@@ -20,24 +20,6 @@ clean:
 tools/coin$(EXE): tools/coin.c coin.h
 	$(CC) -o $@ tools/coin.c $(CFLAGS_ALL) 
 
-## -- manpages --
-ifneq ($(PREFIX),)
-MAN_3=./coin.3 
-install: install-man3
-install-man3: $(MAN_3)
-	mkdir -p $(DESTDIR)$(PREFIX)/share/man/man3
-	cp $(MAN_3) $(DESTDIR)$(PREFIX)/share/man/man3
-endif
-## -- manpages --
-## -- license --
-ifneq ($(PREFIX),)
-install: install-license
-install-license: LICENSE
-	@echo 'I share/doc/c-coin/LICENSE'
-	@mkdir -p $(DESTDIR)$(PREFIX)/share/doc/c-coin
-	@cp LICENSE $(DESTDIR)$(PREFIX)/share/doc/c-coin
-endif
-## -- license --
 ## -- gettext --
 ifneq ($(PREFIX),)
 install: install-po
@@ -56,3 +38,20 @@ install-po:
 	@cp locales/gl/LC_MESSAGES/c-coin.mo $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES
 endif
 ## -- gettext --
+## -- manpages --
+install: install-man3
+install-man3:
+	@echo 'I share/man/man3/'
+	@mkdir -p $(DESTDIR)$(PREFIX)/share/man/man3
+	@echo 'I share/man/man3/coin.3'
+	@cp ./coin.3 $(DESTDIR)$(PREFIX)/share/man/man3
+## -- manpages --
+## -- license --
+ifneq ($(PREFIX),)
+install: install-license
+install-license: LICENSE
+	@echo 'I share/doc/c-coin/LICENSE'
+	@mkdir -p $(DESTDIR)$(PREFIX)/share/doc/c-coin
+	@cp LICENSE $(DESTDIR)$(PREFIX)/share/doc/c-coin
+endif
+## -- license --
