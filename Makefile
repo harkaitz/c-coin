@@ -9,33 +9,45 @@ CFLAGS_ALL =$(CFLAGS) $(CPPFLAGS) $(if,$(NO_GETTEXT),-DNO_GETTEXT) -DPREFIX=\"$(
 ## ------------------------------------------------------
 all: $(PROGRAMS)
 install: $(PROGRAMS)
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	mkdir -p $(DESTDIR)$(PREFIX)/include/types
-	cp $(PROGRAMS) $(DESTDIR)$(PREFIX)/bin
-	cp $(HEADERS)  $(DESTDIR)$(PREFIX)/include/types
+	@echo 'I bin/ $(PROGRAMS)'
+	@mkdir -p $(DESTDIR)$(PREFIX)/bin
+	@cp $(PROGRAMS) $(DESTDIR)$(PREFIX)/bin
+	@echo 'I include/types/ $(HEADERS)'
+	@mkdir -p $(DESTDIR)$(PREFIX)/include/types
+	@cp $(HEADERS)  $(DESTDIR)$(PREFIX)/include/types
 clean:
-	rm -f $(PROGRAMS)
+	@echo "D $(PROGRAMS)"
+	@rm -f $(PROGRAMS)
 
 ## ------------------------------------------------------
 tools/coin$(EXE): tools/coin.c coin.h
-	$(CC) -o $@ tools/coin.c $(CFLAGS_ALL) 
+	@echo "B $@ $^"
+	@$(CC) -o $@ tools/coin.c $(CFLAGS_ALL) 
 
 ## -- gettext --
-ifneq ($(PREFIX),)
+update: u-locales
+u-locales:
+	@auto-gettext update
+DISABLE_GETTEXT=$(shell which msgfmt >/dev/null 2>&1 || echo y)
+ifeq ($(DISABLE_GETTEXT),)
 install: install-po
 install-po:
-	@echo 'I share/locale/es/LC_MESSAGES/c-coin.mo'
+	@echo 'MO share/locale/es/LC_MESSAGES/c-coin.mo'
 	@mkdir -p $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
-	@cp locales/es/LC_MESSAGES/c-coin.mo $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
-	@echo 'I share/locale/eu/LC_MESSAGES/c-coin.mo'
+	@rm -f $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES/c-coin.mo
+	@msgfmt --output-file=$(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES/c-coin.mo ./locales/es/c-coin.po
+	@echo 'MO share/locale/eu/LC_MESSAGES/c-coin.mo'
 	@mkdir -p $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
-	@cp locales/eu/LC_MESSAGES/c-coin.mo $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
-	@echo 'I share/locale/ca/LC_MESSAGES/c-coin.mo'
+	@rm -f $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES/c-coin.mo
+	@msgfmt --output-file=$(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES/c-coin.mo ./locales/eu/c-coin.po
+	@echo 'MO share/locale/ca/LC_MESSAGES/c-coin.mo'
 	@mkdir -p $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES
-	@cp locales/ca/LC_MESSAGES/c-coin.mo $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES
-	@echo 'I share/locale/gl/LC_MESSAGES/c-coin.mo'
+	@rm -f $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES/c-coin.mo
+	@msgfmt --output-file=$(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES/c-coin.mo ./locales/ca/c-coin.po
+	@echo 'MO share/locale/gl/LC_MESSAGES/c-coin.mo'
 	@mkdir -p $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES
-	@cp locales/gl/LC_MESSAGES/c-coin.mo $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES
+	@rm -f $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES/c-coin.mo
+	@msgfmt --output-file=$(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES/c-coin.mo ./locales/gl/c-coin.po
 endif
 ## -- gettext --
 ## -- manpages --
@@ -47,11 +59,9 @@ install-man3:
 	@cp ./coin.3 $(DESTDIR)$(PREFIX)/share/man/man3
 ## -- manpages --
 ## -- license --
-ifneq ($(PREFIX),)
 install: install-license
 install-license: LICENSE
 	@echo 'I share/doc/c-coin/LICENSE'
 	@mkdir -p $(DESTDIR)$(PREFIX)/share/doc/c-coin
 	@cp LICENSE $(DESTDIR)$(PREFIX)/share/doc/c-coin
-endif
 ## -- license --
