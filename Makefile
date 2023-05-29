@@ -17,28 +17,6 @@ clean:
 ## -- programs
 tools/coin$(EXE): tools/coin.c coin.h
 	$(CC) -o $@ tools/coin.c $(CFLAGS_ALL) 
-## -- gettext --
-update: u-locales
-u-locales:
-	auto-gettext update
-DISABLE_GETTEXT=$(shell which msgfmt >/dev/null 2>&1 || echo y)
-ifeq ($(DISABLE_GETTEXT),)
-install: install-po
-install-po:
-	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
-	rm -f $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES/c-coin.mo
-	msgfmt --output-file=$(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES/c-coin.mo ./locales/es/c-coin.po
-	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
-	rm -f $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES/c-coin.mo
-	msgfmt --output-file=$(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES/c-coin.mo ./locales/eu/c-coin.po
-	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES
-	rm -f $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES/c-coin.mo
-	msgfmt --output-file=$(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES/c-coin.mo ./locales/ca/c-coin.po
-	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES
-	rm -f $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES/c-coin.mo
-	msgfmt --output-file=$(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES/c-coin.mo ./locales/gl/c-coin.po
-endif
-## -- gettext --
 ## -- manpages --
 install: install-man3
 install-man3:

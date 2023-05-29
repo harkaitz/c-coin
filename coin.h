@@ -9,13 +9,6 @@
 #include <stdio.h>
 #include <alloca.h>
 #include <strings.h>
-#ifdef NO_GETTEXT
-#  define COIN_T(T) (T)
-#else
-#  include <libintl.h>
-#  define COIN_T(T) dgettext("c-coin", T)
-#endif
-
 
 typedef struct coin_s {
     unsigned long cents;
@@ -93,7 +86,7 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
         while (!strchr("1234567890", *p)) ++p;
     }
     if (!*p/*err*/) {
-        if (_reason) *_reason = COIN_T("Invalid monetary format");
+        if (_reason) *_reason = "Invalid monetary format";
         return false;
     }
     if (currency) {
@@ -103,11 +96,11 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
     /* Get first number. */
     n1 = strtol(p, &next, 10);
     if (next == p/*err*/) {
-        if (_reason) *_reason = COIN_T("Invalid monetary format");
+        if (_reason) *_reason = "Invalid monetary format";
         return false;
     }
     if (n1 >= LONG_MAX/200 || n2 < 0/*err*/) {
-        if (_reason) *_reason =  COIN_T("Invalid monetary format");
+        if (_reason) *_reason =  "Invalid monetary format";
         return false;
     }
     p = next;
@@ -122,11 +115,11 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
         pp[ppn] = '\0';
         n2 = strtol(pp, &next, 10);
         if (*next != '\0'/*err*/) {
-            if (_reason) *_reason = COIN_T("Invalid monetary format");
+            if (_reason) *_reason = "Invalid monetary format";
             return false;
         }
         if (n2 < 0 || n2 >= 100 || (next-pp)>=3/*err*/) {
-            if (_reason) *_reason = COIN_T("Unsupported monetary precision");
+            if (_reason) *_reason = "Unsupported monetary precision";
             return false;
         }
         p = next;
@@ -135,7 +128,7 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
     /* Get currency from the end. */
     if (*p) {
         if (currency/*err*/) {
-            if (_reason) *_reason = COIN_T("Invalid monetary format");
+            if (_reason) *_reason = "Invalid monetary format";
             return false;
         }
         currency     = p;
@@ -154,7 +147,7 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
     /* Check it is allowed. */
     const char *a = coin_currency_is_allowed(currency, currency_len, false);
     if (!a/*err*/) {
-        if (_reason) *_reason = COIN_T("Unsupported currency");
+        if (_reason) *_reason = "Unsupported currency";
         return false;
     }
     
@@ -195,11 +188,11 @@ coin_fprintf (coin_t _c, FILE *_fp, bool _with_currency) {
 static inline bool
 coin_divide1 (coin_t *_o, coin_t _i, unsigned long _div, const char **_reason) {
     if (_div == 0/*err*/) {
-        if (_reason) *_reason = COIN_T("Monetary division by zero");
+        if (_reason) *_reason = "Monetary division by zero";
         return false;
     }
     if (_i.cents % _div/*err*/) {
-        if(_reason) *_reason = COIN_T("Monetary not divisible");
+        if(_reason) *_reason = "Monetary not divisible";
         return false;
     }
     _o->cents = _i.cents / _div;
@@ -210,15 +203,15 @@ coin_divide1 (coin_t *_o, coin_t _i, unsigned long _div, const char **_reason) {
 static inline bool
 coin_divide2 (long *_o, coin_t _i, coin_t _div, const char **_reason) {
     if (!coin_same_currency(_i,_div)/*err*/) {
-        if (_reason) *_reason = COIN_T("Not the same currency");
+        if (_reason) *_reason = "Not the same currency";
         return false;
     }
     if (_div.cents == 0/*err*/) {
-        if (_reason) *_reason = COIN_T("Monetary division by zero");
+        if (_reason) *_reason = "Monetary division by zero";
         return false;
     }
     if (_i.cents % _div.cents/*err*/) {
-        if (_reason) *_reason = COIN_T("Monetary not divisible");
+        if (_reason) *_reason = "Monetary not divisible";
         return false;
     }
     *_o = _i.cents / _div.cents;
@@ -228,11 +221,11 @@ coin_divide2 (long *_o, coin_t _i, coin_t _div, const char **_reason) {
 static inline bool
 coin_substract (coin_t *_o, coin_t _c1, coin_t _c2, const char **_reason) {
     if (!coin_same_currency(_c1,_c2)/*err*/) {
-        if (_reason) *_reason = COIN_T("Not the same currency");
+        if (_reason) *_reason = "Not the same currency";
         return false;
     }
     if (_c2.cents > _c1.cents/*err*/) {
-        if (_reason) *_reason = COIN_T("Monetary value crosses to negative");
+        if (_reason) *_reason = "Monetary value crosses to negative";
         return false;
     }
     _o->cents = _c1.cents - _c2.cents;
@@ -265,28 +258,25 @@ coin_str(coin_t _c, coin_ss *_cs) {
 
 #endif
 /**l*
- * 
  * MIT License
  * 
- * Bug reports, feature requests to gemini|https://harkadev.com/oss
  * Copyright (c) 2023 Harkaitz Agirre, harkaitz.aguirre@gmail.com
  * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  **l*/
